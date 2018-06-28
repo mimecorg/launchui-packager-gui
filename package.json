@@ -1,0 +1,39 @@
+{
+  "name": "launchui-packager-gui",
+  "version": "0.1.1",
+  "description": "GUI front-end for LaunchUI Packager",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "webpack --config build/webpack.config.js",
+    "start": "node ./dist/main.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mimecorg/launchui-packager-gui.git"
+  },
+  "keywords": [
+    "node",
+    "libui",
+    "packager",
+    "desktop"
+  ],
+  "author": "Michał Męciński",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mimecorg/launchui-packager-gui/issues"
+  },
+  "homepage": "https://github.com/mimecorg/launchui-packager-gui",
+  "dependencies": {
+    "launchui-packager": "^0.1.1",
+    "vuido": "^0.1.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "vue-loader": "^15.0.11",
+    "vue-template-compiler": "^2.5.16",
+    "vuido-template-compiler": "^0.1.2",
+    "webpack": "^3.12.0"
+  }
+}
