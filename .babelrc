@@ -8,5 +8,6 @@
       "useBuiltIns": true
     } ]
   ],
+  "plugins": [ "transform-object-rest-spread" ],
   "comments": false
 }
