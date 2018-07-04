@@ -16,10 +16,10 @@
           <FormGroup title="Input">
             <TextInput label="Package name:" v-bind:enabled="isEnabled" v-model="options.name"/>
             <TextInput label="Package version:" v-bind:enabled="isEnabled" v-model="version"/>
-            <FileInput label="Entry script:" v-bind:enabled="isEnabled" v-model="options.entry"/>
+            <FileInput label="Entry script:" v-bind:enabled="isEnabled" v-bind:dir-path="dirPath" v-model="options.entry"/>
           </FormGroup>
           <FormGroup title="Output">
-            <FileInput label="Output location:" v-bind:enabled="isEnabled" v-model="options.location"/>
+            <TextInput label="Output location:" v-bind:enabled="isEnabled" v-model="options.location"/>
             <DropdownList label="Package format:" v-bind:items="[ 'No package', 'ZIP archive' ]" v-bind:enabled="isEnabled" v-model="packageIndex"/>
             <Checkbox v-bind:enabled="isEnabled" v-model="options.overwrite">Overwrite output package</Checkbox>
           </FormGroup>
@@ -34,11 +34,11 @@
             <TextInput label="Copyright:" v-bind:enabled="isEnabled" v-model="options.copyright"/>
           </FormGroup>
           <FormGroup title="Icons">
-            <FileInput label="Windows icon:" v-bind:enabled="isEnabled" v-model="options.icon.win32"/>
-            <FileInput label="OS X icon:" v-bind:enabled="isEnabled" v-model="options.icon.darwin"/>
+            <FileInput label="Windows icon:" v-bind:enabled="isEnabled" v-bind:dir-path="dirPath" v-model="options.icon.win32"/>
+            <FileInput label="OS X icon:" v-bind:enabled="isEnabled" v-bind:dir-path="dirPath" v-model="options.icon.darwin"/>
           </FormGroup>
           <FormGroup title="License">
-            <FileInput label="License file:" v-bind:enabled="isEnabled" v-model="options.license"/>
+            <FileInput label="License file:" v-bind:enabled="isEnabled" v-bind:dir-path="dirPath" v-model="options.license"/>
           </FormGroup>
           <FormGroup title="OS X Bundle">
             <TextInput label="Bundle identifier:" v-bind:enabled="isEnabled" v-model="options.identifier"/>
@@ -47,12 +47,12 @@
         </Box>
         <Box label="Advanced" padded>
           <FormGroup title="Additional Files">
-            <FileInput label="Source directory:" v-bind:enabled="isEnabled" v-model="options.directory"/>
+            <TextInput label="Source directory:" v-bind:enabled="isEnabled" v-model="options.directory"/>
             <TextInput label="File patterns:" v-bind:enabled="isEnabled" v-model="options.files"/>
           </FormGroup>
           <FormGroup title="LaunchUI Settings">
             <TextInput label="Version:" v-bind:enabled="isEnabled" v-model="options.launchui.version"/>
-            <FileInput label="Cache location:" v-bind:enabled="isEnabled" v-model="options.launchui.cache"/>
+            <TextInput label="Cache location:" v-bind:enabled="isEnabled" v-model="options.launchui.cache"/>
           </FormGroup>
         </Box>
       </Tab>
