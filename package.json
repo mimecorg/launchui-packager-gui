@@ -5,6 +5,7 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "webpack --config build/webpack.config.js",
+    "watch": "webpack --watch --config build/webpack.config.js",
     "start": "node ./dist/main.js"
   },
   "repository": {
