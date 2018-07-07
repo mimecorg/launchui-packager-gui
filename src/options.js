@@ -2,8 +2,8 @@ export function getDefaultOptions() {
   return {
     name: '',
     entry: '',
-    location: '',
-    package: '',
+    out: '',
+    pack: '',
     overwrite: false,
     company: '',
     copyright: '',
@@ -14,7 +14,7 @@ export function getDefaultOptions() {
     license: '',
     identifier: '',
     category: '',
-    directory: '',
+    dir: '',
     files: '',
     launchui: {
       version: '',
@@ -44,4 +44,41 @@ export function cloneOptions( options ) {
   } else {
     return options;
   }
+}
+
+export function toPackagerOptions( options, version, platform, arch ) {
+  const result = {
+    name: options.name,
+    version: version,
+    entry: options.entry,
+    platform: platform,
+    arch: arch,
+    overwrite: options.overwrite,
+    launchuiOpts: {}
+  };
+  if ( options.out != '' )
+    result.out = options.out;
+  if ( options.pack != '' )
+    result.pack = options.pack;
+  if ( options.launchui.version != '' )
+    result.launchuiOpts.version = options.launchui.version;
+  if ( options.launchui.cache != '' )
+    result.launchuiOpts.cache = options.launchui.cache;
+  if ( options.company != '' )
+    result.company = options.company;
+  if ( options.copyright != '' )
+    result.copyright = options.copyright;
+  if ( options.identifier != '' )
+    result.identifier = options.identifier;
+  if ( options.category != '' )
+    result.category = options.category;
+  if ( options.icon[ arch ] != undefined && options.icon[ arch ] != '' )
+    result.icon = options.icon[ arch ];
+  if ( options.license != '' )
+    result.license = options.license;
+  if ( options.dir != '' )
+    result.dir = options.dir;
+  if ( options.files != '' )
+    result.files = options.files;
+  return result;
 }

@@ -5,8 +5,8 @@
         <Box padded>
           <Box horizontal padded>
             <TextInput stretchy readonly v-bind:value="dirPath"/>
-            <Button v-on:click="openProject">Open Project...</Button>
-            <Button v-bind:enabled="isEnabled" v-on:click="saveProject">Save Project</Button>
+            <Button v-bind:enabled="!isBuilding" v-on:click="openProject">Open Project...</Button>
+            <Button v-bind:enabled="isEnabled && !isBuilding" v-on:click="saveProject">Save Project</Button>
           </Box>
           <Text>{{ projectStatus }}</Text>
         </Box>
@@ -19,8 +19,8 @@
             <FileInput label="Entry script:" v-bind:enabled="isEnabled" v-bind:dir-path="dirPath" v-model="options.entry"/>
           </FormGroup>
           <FormGroup title="Output">
-            <TextInput label="Output location:" v-bind:enabled="isEnabled" v-model="options.location"/>
-            <DropdownList label="Package format:" v-bind:items="[ 'No package', 'ZIP archive' ]" v-bind:enabled="isEnabled" v-model="packageIndex"/>
+            <TextInput label="Output location:" v-bind:enabled="isEnabled" v-model="options.out"/>
+            <DropdownList label="Package format:" v-bind:items="[ 'No package', 'ZIP archive' ]" v-bind:enabled="isEnabled" v-model="packIndex"/>
             <Checkbox v-bind:enabled="isEnabled" v-model="options.overwrite">Overwrite output package</Checkbox>
           </FormGroup>
           <FormGroup title="Target">
@@ -47,7 +47,7 @@
         </Box>
         <Box label="Advanced" padded>
           <FormGroup title="Additional Files">
-            <TextInput label="Source directory:" v-bind:enabled="isEnabled" v-model="options.directory"/>
+            <TextInput label="Source directory:" v-bind:enabled="isEnabled" v-model="options.dir"/>
             <TextInput label="File patterns:" v-bind:enabled="isEnabled" v-model="options.files"/>
           </FormGroup>
           <FormGroup title="LaunchUI Settings">
@@ -59,8 +59,8 @@
       <Group title="Package" margined>
         <Box padded>
           <Box horizontal padded>
-            <ProgressBar stretchy/>
-            <Button v-bind:enabled="isEnabled">Build Package</Button>
+            <ProgressBar stretchy v-bind:value="progress"/>
+            <Button v-bind:enabled="canBuild" v-on:click="buildPackage">Build Package</Button>
           </Box>
           <Text>{{ packageStatus }}</Text>
         </Box>
@@ -71,12 +71,13 @@
 
 <script>
 import libui from 'libui-node'
+import packager from 'launchui-packager'
 import path from 'path'
 
-import { getDefaultOptions, areOptionsEqual, cloneOptions } from './options'
+import { getDefaultOptions, areOptionsEqual, cloneOptions, toPackagerOptions } from './options'
 import { openProject, saveProject } from './project'
 
-const packages = [ '', 'zip' ];
+const packFormats = [ '', 'zip' ];
 const platforms = [ 'win32', 'darwin', 'linux' ];
 const archs = [ 'ia32', 'x64' ];
 
@@ -88,12 +89,18 @@ export default {
       savedOptions: null,
       version: '',
       platform: process.platform,
-      arch: process.arch
+      arch: process.arch,
+      isBuilding: false,
+      buildError: null,
+      buildResult: null
     };
   },
   computed: {
     isEnabled() {
-      return this.dirPath != '';
+      return this.dirPath != '' && !this.isBuilding;
+    },
+    canBuild() {
+      return this.isEnabled && this.options.name != '' && this.version != '' && this.options.entry != '';
     },
     projectStatus() {
       if ( !this.isEnabled )
@@ -106,7 +113,7 @@ export default {
         return 'This project is up to date.';
     },
     packageStatus() {
-      if ( !this.isEnabled )
+      if ( this.dirPath == '' )
         return 'Open a project to build the package.';
       else if ( this.options.name == '' )
         return 'Missing package name.';
@@ -114,15 +121,21 @@ export default {
         return 'Missing package version.';
       else if ( this.options.entry == '' )
         return 'Missing entry script.';
+      else if ( this.isBuilding )
+        return 'Building package...';
+      else if ( this.buildError != null )
+        return 'Error: ' + this.buildError;
+      else if ( this.buildResult != null )
+        return 'Package built successfully: ' + this.buildResult;
       else
         return 'Ready to build the package.';
     },
-    packageIndex: {
+    packIndex: {
       get() {
-        return packages.indexOf( this.options.package );
+        return packFormats.indexOf( this.options.pack );
       },
       set( index ) {
-        this.options.package = packages[ index ];
+        this.options.pack = packFormats[ index ];
       }
     },
     platformIndex: {
@@ -140,6 +153,9 @@ export default {
       set( index ) {
         this.arch = archs[ index ];
       }
+    },
+    progress() {
+      return this.isBuilding ? -1 : 0;
     }
   },
   methods: {
@@ -168,6 +184,8 @@ export default {
       this.options = project.options;
       this.savedOptions = project.savedOptions;
       this.version = project.version;
+      this.buildError = null;
+      this.buildResult = null;
     },
     saveProject() {
       try {
@@ -177,6 +195,20 @@ export default {
         return;
       }
       this.savedOptions = cloneOptions( this.options );
+    },
+    buildPackage() {
+      process.chdir( this.dirPath );
+      const options = toPackagerOptions( this.options, this.version, this.platform, this.arch );
+      this.isBuilding = true;
+      this.buildError = null;
+      this.buildResult = null;
+      packager( options, ( err, outPath ) => {
+        this.isBuilding = false;
+        if ( err != null )
+          this.buildError = err.message;
+        else
+          this.buildResult = this.options.name + '-v' + this.version + '-' + this.platform + '-' + this.arch;
+      } );
     },
     exit() {
       libui.stopLoop();

@@ -30,7 +30,7 @@ module.exports = {
     extensions: [ '.js', '.vue', '.json' ]
   },
   plugins: [
-    new webpack.ExternalsPlugin( 'commonjs', [ 'libui-node' ] ),
+    new webpack.ExternalsPlugin( 'commonjs', [ 'libui-node', 'rcedit' ] ),
     new VueLoaderPlugin()
   ],
   performance: {
