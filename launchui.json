@@ -1,0 +1,22 @@
+{
+  "name": "LaunchUI Packager GUI",
+  "entry": "dist/main.js",
+  "out": "packages",
+  "pack": "zip",
+  "overwrite": true,
+  "company": "Michał Męciński",
+  "copyright": "Copyright (C) 2018 Michał Męciński",
+  "icon": {
+    "win32": "",
+    "darwin": ""
+  },
+  "license": "LICENSE",
+  "identifier": "",
+  "category": "",
+  "dir": ".",
+  "files": "node_modules/rcedit/**",
+  "launchui": {
+    "version": "",
+    "cache": ""
+  }
+}
