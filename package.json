@@ -26,7 +26,7 @@
   "homepage": "https://github.com/mimecorg/launchui-packager-gui",
   "dependencies": {
     "launchui-packager": "^0.1.1",
-    "vuido": "^0.1.2"
+    "vuido": "^0.1.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
