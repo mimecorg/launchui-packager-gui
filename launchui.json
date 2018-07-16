@@ -1,6 +1,6 @@
 {
   "name": "LaunchUI Packager GUI",
-  "entry": "dist/main.js",
+  "entry": "dist/main.min.js",
   "out": "packages",
   "pack": "zip",
   "overwrite": true,
