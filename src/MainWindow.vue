@@ -70,6 +70,7 @@
 </template>
 
 <script>
+import fs from 'fs'
 import libui from 'libui-node'
 import packager from 'launchui-packager'
 import path from 'path'
@@ -198,16 +199,38 @@ export default {
     },
     buildPackage() {
       process.chdir( this.dirPath );
+
+      const dirName = this.options.name + '-v' + this.version + '-' + this.platform + '-' + this.arch;
+      const zipName = dirName + '.zip';
+
+      if ( !this.options.overwrite ) {
+        const targetPath = path.resolve( this.options.out );
+        const dirPath = path.join( targetPath, dirName );
+        const zipPath = path.join( targetPath, zipName );
+        if ( fs.existsSync( dirPath ) ) {
+          libui.UiDialogs.msgBox( this.$el.window, 'Output exists', 'The package directory already exists. Select the "Overwrite output package" option to replace it.' );
+          return;
+        }
+        if ( this.options.pack == 'zip' && fs.existsSync( zipPath ) ) {
+          libui.UiDialogs.msgBox( this.$el.window, 'Output exists', 'The package ZIP file already exists. Select the "Overwrite output package" option to replace it.' );
+          return;
+        }
+      }
+
       const options = toPackagerOptions( this.options, this.version, this.platform, this.arch );
+
       this.isBuilding = true;
       this.buildError = null;
       this.buildResult = null;
+
       packager( options, ( err, outPath ) => {
         this.isBuilding = false;
         if ( err != null )
           this.buildError = err.message;
+        else if ( this.options.pack == 'zip' )
+          this.buildResult = zipName;
         else
-          this.buildResult = this.options.name + '-v' + this.version + '-' + this.platform + '-' + this.arch;
+          this.buildResult = dirName;
       } );
     },
     exit() {
