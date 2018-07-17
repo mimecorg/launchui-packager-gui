@@ -72,8 +72,8 @@ export function toPackagerOptions( options, version, platform, arch ) {
     result.identifier = options.identifier;
   if ( options.category != '' )
     result.category = options.category;
-  if ( options.icon[ arch ] != undefined && options.icon[ arch ] != '' )
-    result.icon = options.icon[ arch ];
+  if ( options.icon[ platform ] != undefined && options.icon[ platform ] != '' )
+    result.icon = options.icon[ platform ];
   if ( options.license != '' )
     result.license = options.license;
   if ( options.dir != '' )
