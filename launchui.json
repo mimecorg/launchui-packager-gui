@@ -7,12 +7,12 @@
   "company": "Michał Męciński",
   "copyright": "Copyright (C) 2018 Michał Męciński",
   "icon": {
-    "win32": "",
-    "darwin": ""
+    "win32": "src/icons/packager.ico",
+    "darwin": "src/icons/packager.icns"
   },
   "license": "LICENSE",
-  "identifier": "",
-  "category": "",
+  "identifier": "org.mimec.launchui-packager-gui",
+  "category": "public.app-category.developer-tools",
   "dir": ".",
   "files": "node_modules/rcedit/**",
   "launchui": {
