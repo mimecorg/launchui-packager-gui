@@ -20,7 +20,7 @@
           </FormGroup>
           <FormGroup title="Output">
             <TextInput label="Output location:" v-bind:enabled="isEnabled" v-model="options.out"/>
-            <DropdownList label="Package format:" v-bind:items="[ 'No package', 'ZIP archive' ]" v-bind:enabled="isEnabled" v-model="packIndex"/>
+            <DropdownList label="Package format:" v-bind:items="[ 'Not packed', 'ZIP archive' ]" v-bind:enabled="isEnabled" v-model="packIndex"/>
             <Checkbox v-bind:enabled="isEnabled" v-model="options.overwrite">Overwrite output package</Checkbox>
           </FormGroup>
           <FormGroup title="Target">
