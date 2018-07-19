@@ -104,7 +104,7 @@ export default {
       return this.isEnabled && this.options.name != '' && this.version != '' && this.options.entry != '';
     },
     projectStatus() {
-      if ( !this.isEnabled )
+      if ( this.dirPath == '' )
         return 'Select a package.json or launchui.json file to open.';
       else if ( this.savedOptions == null )
         return 'Warning: This project is not saved yet.';
