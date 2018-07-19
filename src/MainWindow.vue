@@ -198,6 +198,11 @@ export default {
       this.savedOptions = cloneOptions( this.options );
     },
     buildPackage() {
+      if ( this.platform == 'darwin' && this.arch == 'ia32' ) {
+        libui.UiDialogs.msgBox( this.$el.window, 'Architecture not available', 'The ia32 architecture is not available for the OS X platform.' );
+        return;
+      }
+
       process.chdir( this.dirPath );
 
       const dirName = this.options.name + '-v' + this.version + '-' + this.platform + '-' + this.arch;
