@@ -92,7 +92,7 @@ export default {
       platform: process.platform,
       arch: process.arch,
       isBuilding: false,
-      buildError: null,
+      buildError: false,
       buildResult: null
     };
   },
@@ -124,10 +124,10 @@ export default {
         return 'Missing entry script.';
       else if ( this.isBuilding )
         return 'Building package...';
-      else if ( this.buildError != null )
-        return 'Error: ' + this.buildError;
+      else if ( this.buildError )
+        return 'Building package failed.';
       else if ( this.buildResult != null )
-        return 'Package built successfully: ' + this.buildResult;
+        return 'Building package completed: ' + this.buildResult;
       else
         return 'Ready to build the package.';
     },
@@ -185,7 +185,7 @@ export default {
       this.options = project.options;
       this.savedOptions = project.savedOptions;
       this.version = project.version;
-      this.buildError = null;
+      this.buildError = false;
       this.buildResult = null;
     },
     saveProject() {
@@ -220,17 +220,22 @@ export default {
       const options = toPackagerOptions( this.options, this.version, this.platform, this.arch );
 
       this.isBuilding = true;
-      this.buildError = null;
+      this.buildError = false;
       this.buildResult = null;
 
       packager( options, ( err, outPath ) => {
         this.isBuilding = false;
-        if ( err != null )
-          this.buildError = err.message;
-        else if ( this.options.pack == 'zip' )
-          this.buildResult = zipName;
-        else
-          this.buildResult = dirName;
+        if ( err != null ) {
+          this.buildError = true;
+          this.$nextTick( () => {
+            libui.UiDialogs.msgBoxError( this.$el.window, 'Building package failed', err.message );
+          } );
+        } else {
+          if ( this.options.pack == 'zip' )
+            this.buildResult = zipName;
+          else
+            this.buildResult = dirName;
+        }
       } );
     },
     exit() {
