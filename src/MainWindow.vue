@@ -234,7 +234,10 @@ export default {
       } );
     },
     exit() {
-      libui.stopLoop();
+      if ( !this.isBuilding ) {
+        this.$root.$destroy();
+        libui.stopLoop();
+      }
     }
   }
 }
