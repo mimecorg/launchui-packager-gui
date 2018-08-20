@@ -71,7 +71,6 @@
 
 <script>
 import fs from 'fs'
-import libui from 'libui-node'
 import packager from 'launchui-packager'
 import path from 'path'
 
@@ -161,13 +160,13 @@ export default {
   },
   methods: {
     openProject() {
-      const filePath = libui.UiDialogs.openFile( this.$el.window );
+      const filePath = this.$dialogs.openFile();
       if ( filePath == null )
         return;
 
       const name = path.basename( filePath );
       if ( name != 'package.json' && name != 'launchui.json' ) {
-        libui.UiDialogs.msgBox( this.$el.window, 'Invalid file selected', 'Please select a package.json file or a launchui.json file.' );
+        this.$dialogs.msgBox( 'Invalid file selected', 'Please select a package.json file or a launchui.json file.' );
         return;
       }
 
@@ -177,7 +176,7 @@ export default {
       try {
         project = openProject( dirPath );
       } catch ( error ) {
-        libui.UiDialogs.msgBoxError( this.$el.window, 'Open failed', 'The selected project could not be opened.' );
+        this.$dialogs.msgBoxError( 'Open failed', 'The selected project could not be opened.' );
         return;
       }
 
@@ -192,14 +191,14 @@ export default {
       try {
         saveProject( this.dirPath, this.options );
       } catch ( error ) {
-        libui.UiDialogs.msgBoxError( this.$el.window, 'Save failed', 'The current project could not be saved.' );
+        this.$dialogs.msgBoxError( 'Save failed', 'The current project could not be saved.' );
         return;
       }
       this.savedOptions = cloneOptions( this.options );
     },
     buildPackage() {
       if ( this.platform == 'darwin' && this.arch == 'ia32' ) {
-        libui.UiDialogs.msgBox( this.$el.window, 'Architecture not available', 'The ia32 architecture is not available for the OS X platform.' );
+        this.$dialogs.msgBox( 'Architecture not available', 'The ia32 architecture is not available for the OS X platform.' );
         return;
       }
 
@@ -213,11 +212,11 @@ export default {
         const dirPath = path.join( targetPath, dirName );
         const zipPath = path.join( targetPath, zipName );
         if ( fs.existsSync( dirPath ) ) {
-          libui.UiDialogs.msgBox( this.$el.window, 'Output exists', 'The package directory already exists. Select the "Overwrite output package" option to replace it.' );
+          this.$dialogs.msgBox( 'Output exists', 'The package directory already exists. Select the "Overwrite output package" option to replace it.' );
           return;
         }
         if ( this.options.pack == 'zip' && fs.existsSync( zipPath ) ) {
-          libui.UiDialogs.msgBox( this.$el.window, 'Output exists', 'The package ZIP file already exists. Select the "Overwrite output package" option to replace it.' );
+          this.$dialogs.msgBox( 'Output exists', 'The package ZIP file already exists. Select the "Overwrite output package" option to replace it.' );
           return;
         }
       }
@@ -233,7 +232,7 @@ export default {
         if ( err != null ) {
           this.buildError = true;
           this.$nextTick( () => {
-            libui.UiDialogs.msgBoxError( this.$el.window, 'Building package failed', err.message );
+            this.$dialogs.msgBoxError( 'Building package failed', err.message );
           } );
         } else {
           if ( this.options.pack == 'zip' )
@@ -244,10 +243,8 @@ export default {
       } );
     },
     exit() {
-      if ( !this.isBuilding ) {
-        this.$root.$destroy();
-        libui.stopLoop();
-      }
+      if ( !this.isBuilding )
+        this.$exit();
     }
   }
 }

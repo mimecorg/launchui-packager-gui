@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import libui from 'libui-node'
 import path from 'path'
 
 export default {
@@ -24,7 +23,7 @@ export default {
       this.$emit( 'input', value );
     },
     choose() {
-      const filePath = libui.UiDialogs.openFile( this.$root.$el.window );
+      const filePath = this.$dialogs.openFile();
       if ( filePath == null )
         return;
       if ( this.dirPath != null && filePath.substr( 0, this.dirPath.length ) == this.dirPath ) {
