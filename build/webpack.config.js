@@ -1,6 +1,5 @@
 const path = require( 'path' );
 const webpack = require( 'webpack' );
-const MinifyPlugin = require( 'babel-minify-webpack-plugin' );
 const VueLoaderPlugin = require( 'vue-loader/lib/plugin' );
 const VuidoTemplateCompiler = require( 'vuido-template-compiler' );
 
@@ -11,6 +10,7 @@ module.exports = function( { production } = {} ) {
     process.env.NODE_ENV = 'production';
 
   const config = {
+    mode: production ? 'production' : 'development',
     entry: './src/main.js',
     output: {
       path: path.resolve( __dirname, '../dist' ),
@@ -38,10 +38,10 @@ module.exports = function( { production } = {} ) {
     },
     plugins: [
       new webpack.ExternalsPlugin( 'commonjs', [ 'libui-node', 'rcedit' ] ),
-      new webpack.EnvironmentPlugin( {
-        NODE_ENV: production ? 'production' : 'development'
-      } ),
-      new VueLoaderPlugin()
+      new VueLoaderPlugin(),
+      new webpack.BannerPlugin( {
+        banner: 'LaunchUI Packager GUI v' + Version + '\nCopyright (C) 2018 Michał Męciński\nLicense: MIT'
+      } )
     ],
     performance: {
       hints: false
@@ -52,15 +52,6 @@ module.exports = function( { production } = {} ) {
     },
     devtool: false
   };
-
-  if ( production ) {
-    config.plugins.push( new MinifyPlugin( {}, { comments: false } ) );
-    config.plugins.push( new webpack.BannerPlugin( {
-      banner: 'LaunchUI Packager GUI v' + Version + ' | Copyright (C) 2018 Michał Męciński | License: MIT'
-    } ) );
-  } else {
-    config.plugins.push( new webpack.NamedModulesPlugin() );
-  }
 
   return config;
 }
