@@ -10,6 +10,10 @@ LaunchUI Packager GUI is a desktop application which simplifies creating LaunchU
 
 LaunchUI Packager GUI is based on [Vuido](https://github.com/mimecorg/vuido), a framework for creating native desktop applications using Vue.js.
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/mimecorg/launchui-packager-gui/master/images/main.png" alt style="max-width:100%;">
+</p>
+
 ## Installation
 
 Download one of the packages from the [LaunchUI Packager GUI releases](https://github.com/mimecorg/launchui-packager-gui/releases), unpack it anywhere and run the application.
